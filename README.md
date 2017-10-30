@@ -1,12 +1,10 @@
 # Self Driving Nanodegree PID Controller
 
----
-
 [//]: # (Image References)
 [image1]: images/High_Kp_1.0.JPG "High Proportional Constant -1.0"
 [image2]: images/Low_Kp_0.1.JPG "Low Proportional Constant -0.1"
 [image3]: images/PD_Graph.JPG "PD Controller with Kp=-0.2 and Kd=-3.0"
-[image4]: images/PD_controller_Kp-0.1_Kd-0.3.JPG "PD Controller with Kp=-0.1 and Kd=-3.0"
+[image4]: images/PD_controller_Kp-0.1_Kd-0.3.png "PD Controller with Kp=-0.1 and Kd=-3.0"
 
 The goal of this project is to adjust steering angle of a car in real-time to keep our Robot/Car within the track using PID Controller.
 
@@ -38,7 +36,7 @@ I learned from classroom session that keeping the Kp constant high results in fa
 
 ![alt text][image1] ![alt text][image2]
 
-So I reduced it to 0.1 and it resulted in much smoother car drive. I passed the first turn with 32mph speed unlike the first try but it crossed the edges after that as we can predict.
+So I changed it to -0.1 and it resulted in much smoother car drive. I passed the first turn with 32mph speed unlike the first try but it crossed the edges after that as we can predict.
 
 **PD Controller**
 
@@ -52,9 +50,9 @@ Refer this screenshot below which shows that how green line (PD Controller) conv
 
 Here the derivative of crosstrack error is the difference between cte (crosstrack error) at time t and cte at time t-1 (i.e. previous error).
 
-I set my constant Kd at 1.0 initially and it was able to complete the whole track without falling off the edge. Although it was oscillating much more when there are turns on the track and eventually it shoots over the lane.
+I set my constant `Kd=-1.0` initially and it was able to complete the whole track without falling off the edge. Although it was oscillating much more when there are turns on the track and eventually it shoots over the lane.
 
-I changed Kd to 3.0 and surprisingly the car was able to go on the track without falling off, unlike prior behavior. Other than a little bit of oscillatory behavior it didn't cross the edges. Please refer below image where the PD Controller is working well on turns also along with straight paths.
+I changed d parameter from -1.0 to `Kd=-3.0` and surprisingly the car was able to go on the track without falling off, unlike prior behavior. Other than a little bit of oscillatory behavior it didn't cross the edges. Please refer below image where the PD Controller is working well on turns also along with straight paths.
 
 ![alt text][image4]
 
@@ -68,10 +66,10 @@ The formula for calculating steer value is: `steering = -Kp * CTE - Kd * diff_CT
 
 I tried setting Ki to 0.001 with `Kp=-0.1` and `Kd=-3.0` respectively. But it didn't work well and failed within seconds. Then I tried much lesser constant -0.0001 and it was working well. Still, the car was driving on the boundaries when the complex turns comes up.
 
-## Fine Turning
+## Fine Tuning
 
-It turns out that even after tuning Ki to from 0.001 to 0.0001 it didn't make much difference to the problem of driving near boundaries while sharp turning. I figured out the solution that I need to increase my Kp from 0.1. Because low Kp wasn't increasing my steering angle to the desired value when needed because the multiplication factor was very small.
+It turns out that even after tuning Ki to from -0.001 to -0.0001 it didn't make much difference to the problem of driving near boundaries while sharp turning. I figured out the solution that I need to increase my Kp from -0.1. Because low Kp wasn't increasing my steering angle to the desired value when needed because the multiplication factor was very small.
 
-I also had to change my Kd constant in process of increasing my Kp as the car started introducing more oscillations. By increasing Kd to 6.0 oscillations were reduced considerably. And I kept my Ki to really small value as 0.0009.
+I also had to change my Kd constant in process of increasing my Kp as the car started introducing more oscillations. By increasing Kd to `-6.0` oscillations were reduced considerably. And I kept my Ki to really small value as `-0.0009`.
 
 That makes my final values of constants as `[-0.22, -0.0009, -6.0]`. With these parameters car in a simulator is able to drive without going near to edges on a straight path as well as sharp turning.
